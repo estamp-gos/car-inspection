@@ -4,39 +4,29 @@
   <meta charset="utf-8">
   <title>Redirecting...</title>
   <script>
-    // Get the current path
-    const path = window.location.pathname;
-    
-    // Prevent redirect loops by checking if path already contains vehicle.html
-    if (path.includes('vehicle.html')) {
-      // We're already in a redirect loop, extract the VIN part
-      const parts = path.split('/');
-      let vinPart = '';
+    // Only redirect if we haven't already tried to process this URL
+    if (!sessionStorage.getItem('attempted404Redirect')) {
+      // Mark that we've attempted a redirect
+      sessionStorage.setItem('attempted404Redirect', 'true');
       
-      // Look for a part that might be a VIN or car description
-      for (let i = parts.length - 1; i >= 0; i--) {
-        if (parts[i] && parts[i] !== 'vehicle.html' && parts[i] !== '404.html') {
-          vinPart = parts[i];
-          break;
-        }
-      }
+      // Get the current path
+      const path = window.location.pathname;
       
-      if (vinPart) {
-        // Direct to a clean URL with just the VIN part
-        window.location.href = '/vehicle.html/' + vinPart;
+      // Check if this looks like a vehicle URL
+      if (path.includes('-') || /[A-Z0-9]{17}/.test(path)) {
+        // Extract the car description and/or VIN without leading/trailing slashes
+        const cleanPath = path.replace(/^\/+|\/+$/g, '');
+        
+        // Redirect to the vehicle page with clean path
+        window.location.replace('/vehicle.html/' + cleanPath);
       } else {
-        window.location.href = '/'; // Go home if no VIN found
+        // Not a vehicle request, go to homepage
+        window.location.replace('/');
       }
-    } 
-    // Original vehicle detection logic
-    else if (path.includes('-') || /[A-Z0-9]{17}/.test(path)) {
-      // Extract the actual VIN/car part without extra slashes
-      const cleanPath = path.replace(/^\/+|\/+$/g, ''); // Remove leading/trailing slashes
-      window.location.href = '/vehicle.html/' + cleanPath;
-    } 
-    else {
-      // Not a vehicle request, go to homepage
-      window.location.href = '/';
+    } else {
+      // We've already attempted a redirect, clear the flag and go to homepage
+      sessionStorage.removeItem('attempted404Redirect');
+      window.location.replace('/');
     }
   </script>
 </head>

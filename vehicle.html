@@ -45,14 +45,18 @@
   </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    // IMPORTANT: Prevent infinite redirect loops
+    // Check if we've already processed this page to prevent infinite loops
+    if (!sessionStorage.getItem('processedVehiclePage')) {
+      sessionStorage.setItem('processedVehiclePage', 'true');
+      
       // Extract VIN from URL path
       const pathSegments = window.location.pathname.split('/');
       let vin = '';
       
       // The last segment might be empty if URL ends with /
       for (let i = pathSegments.length - 1; i >= 0; i--) {
-        if (pathSegments[i].length > 0) {
+        if (pathSegments[i].length > 0 && pathSegments[i] !== 'vehicle.html') {
           vin = pathSegments[i];
           break;
         }
@@ -85,7 +89,10 @@
         document.getElementById('vehicle-title').textContent = 'Vehicle Not Found';
         document.getElementById('vehicle-info').innerHTML = '<p>The requested vehicle information could not be found.</p>';
       }
-    });
+    } else {
+      // We've already been here, clear the flag for next visit
+      sessionStorage.removeItem('processedVehiclePage');
+    }
     
     function openCheckoutModal() {
       // Implementation to open your checkout modal
