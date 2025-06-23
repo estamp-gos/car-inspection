@@ -4,13 +4,38 @@
   <meta charset="utf-8">
   <title>Redirecting...</title>
   <script>
-    // Check if the URL appears to be a vehicle request
+    // Get the current path
     const path = window.location.pathname;
-    if (path.includes('-') || /[A-Z0-9]{17}/.test(path)) {
-      // This looks like a VIN or vehicle page - redirect to the vehicle page with the path as a parameter
-      window.location.href = '/vehicle.html' + window.location.pathname;
-    } else {
-      // Otherwise redirect to homepage
+    
+    // Prevent redirect loops by checking if path already contains vehicle.html
+    if (path.includes('vehicle.html')) {
+      // We're already in a redirect loop, extract the VIN part
+      const parts = path.split('/');
+      let vinPart = '';
+      
+      // Look for a part that might be a VIN or car description
+      for (let i = parts.length - 1; i >= 0; i--) {
+        if (parts[i] && parts[i] !== 'vehicle.html' && parts[i] !== '404.html') {
+          vinPart = parts[i];
+          break;
+        }
+      }
+      
+      if (vinPart) {
+        // Direct to a clean URL with just the VIN part
+        window.location.href = '/vehicle.html/' + vinPart;
+      } else {
+        window.location.href = '/'; // Go home if no VIN found
+      }
+    } 
+    // Original vehicle detection logic
+    else if (path.includes('-') || /[A-Z0-9]{17}/.test(path)) {
+      // Extract the actual VIN/car part without extra slashes
+      const cleanPath = path.replace(/^\/+|\/+$/g, ''); // Remove leading/trailing slashes
+      window.location.href = '/vehicle.html/' + cleanPath;
+    } 
+    else {
+      // Not a vehicle request, go to homepage
       window.location.href = '/';
     }
   </script>
