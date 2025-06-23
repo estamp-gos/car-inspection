@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Get instant car check reports - Find accurate vehicle history, accident records, mileage verification, and ownership details at carcheck.store">
+  <meta name="keywords" content="car check, vehicle history report, car inspection, VIN check, accident history">
+  <title>Vehicle Report | Car Check</title>
+  <!-- Include your CSS files here -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Car Check",
+    "description": "Comprehensive vehicle history reports for informed automotive decisions",
+    "provider": {
+      "@type": "Organization",
+      "name": "Car Check",
+      "url": "https://carcheck.store"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <!-- Header content from your index.html -->
+  </header>
+
+  <main>
+    <div class="vehicle-details">
+      <h1 id="vehicle-title">Loading Vehicle Information...</h1>
+      <div id="vehicle-info">
+        <p>Please wait while we retrieve vehicle details...</p>
+      </div>
+      
+      <div class="purchase-options">
+        <h2>Get Full Report</h2>
+        <button onclick="openCheckoutModal()">Purchase Report</button>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <!-- Footer content from your index.html -->
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Extract VIN from URL path
+      const pathSegments = window.location.pathname.split('/');
+      let vin = '';
+      
+      // The last segment might be empty if URL ends with /
+      for (let i = pathSegments.length - 1; i >= 0; i--) {
+        if (pathSegments[i].length > 0) {
+          vin = pathSegments[i];
+          break;
+        }
+      }
+      
+      if (vin) {
+        // Extract car details from URL if available
+        const urlParts = vin.split('-');
+        if (urlParts.length > 1) {
+          const actualVin = urlParts[urlParts.length - 1];
+          
+          // Reconstruct the car name from URL parts (excluding the VIN)
+          const carName = urlParts.slice(0, -1).join(' ').replace(/-/g, ' ');
+          
+          document.getElementById('vehicle-title').textContent = carName.toUpperCase();
+          document.getElementById('vehicle-info').innerHTML = `
+            <p><strong>VIN:</strong> ${actualVin}</p>
+            <p>To view the complete history of this vehicle including:</p>
+            <ul>
+              <li>✓ Accident History</li>
+              <li>✓ Title Information</li>
+              <li>✓ Ownership Records</li>
+              <li>✓ Odometer Readings</li>
+              <li>✓ Service Records</li>
+            </ul>
+            <p>Please purchase one of our comprehensive reports below.</p>
+          `;
+        }
+      } else {
+        document.getElementById('vehicle-title').textContent = 'Vehicle Not Found';
+        document.getElementById('vehicle-info').innerHTML = '<p>The requested vehicle information could not be found.</p>';
+      }
+    });
+    
+    function openCheckoutModal() {
+      // Implementation to open your checkout modal
+      window.location.href = "/#pricing";
+    }
+  </script>
+</body>
+</html>

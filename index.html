@@ -8,8 +8,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="profile" href="https://gmpg.org/xfn/11">
-  <title>Car Check &#8211; Instant Car Check</title>
+  <meta name="description" content="Get instant car check reports - Find accurate vehicle history, accident records, mileage verification, and ownership details at carcheck.store">
+  <meta name="keywords" content="car check, vehicle history report, car inspection, VIN check, accident history">
+  <link rel="profile" href="https://gmpg.org/xfn/11"> 
+  <title>Car Check | Instant Vehicle History Reports & Inspections</title>
   <meta name='robots' content='max-image-preview:large' />
   <style>
     img:is([sizes="auto" i], [sizes^="auto," i]) {
@@ -706,6 +708,28 @@
       height: 700px;
     }
   </style>
+  <script>
+  document.getElementById('vin').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const vinNumber = document.getElementById('vin-input').value;
+    if (vinNumber) {
+      window.location.href = '/vehicle.html/' + vinNumber;
+    }
+  });
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Car Check",
+  "description": "Comprehensive vehicle history reports for informed automotive decisions",
+  "provider": {
+    "@type": "Organization",
+    "name": "Car Check",
+    "url": "https://carcheck.store"
+  }
+}
+</script>
 </head>
 
 <body
