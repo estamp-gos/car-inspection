@@ -39,7 +39,8 @@ fetch("https://www.carcheck.store/send-email", {
   body: JSON.stringify({
     email: sessionStorage.getItem("userEmail"),
     name: sessionStorage.getItem("userName"),
-    plan: sessionStorage.getItem("userPlan")
+    plan: sessionStorage.getItem("userPlan"),
+    vin: sessionStorage.getItem("userVin")
   })
 })
 .then(async res => {
