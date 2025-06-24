@@ -33,20 +33,27 @@
     }
   </style>
   <script>
-  // Replace with actual values passed via URL params or session/localStorage
-  const email = sessionStorage.getItem("userEmail");
-  const name = sessionStorage.getItem("userName");
-  const plan = sessionStorage.getItem("userPlan");
-  const vin = sessionStorage.getItem("userVin");
-
-  fetch("https://www.carcheck.store/send-email", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, name, plan, vin })
+fetch("https://www.carcheck.store/send-email", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    email: sessionStorage.getItem("userEmail"),
+    name: sessionStorage.getItem("userName"),
+    plan: sessionStorage.getItem("userPlan")
   })
-  .then(res => res.json())
-  .then(data => console.log("Email sent", data))
-  .catch(err => console.error("Email error", err));
+})
+.then(async res => {
+  const contentType = res.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    const data = await res.json();
+    console.log("Email sent:", data);
+  } else {
+    const text = await res.text();
+    console.warn(" Response not JSON:", text);
+  }
+})
+.catch(err => console.error(" Email error", err));
+
 </script>
 
 </head>
