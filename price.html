@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Check - Pricing Plans</title>
+    <!-- Add Paddle.js library -->
+    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2757ad;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 350px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .popular {
+            border: 2px solid #2757ad;
+            position: relative;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            right: 30px;
+            background: #2757ad;
+            color: white;
+            font-size: 14px;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2757ad;
+        }
+
+        .price {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .price small {
+            font-size: 16px;
+            color: #888;
+            font-weight: normal;
+        }
+
+        .features {
+            list-style: none;
+            margin: 25px 0;
+        }
+
+        .features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: #2757ad;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #2757ad;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #1c4392;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #2757ad;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .pricing-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            .pricing-card {
+                max-width: 100%;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #2757ad;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Choose Your Car Check Plan</h1>
+            <p class="subtitle">Get comprehensive vehicle history reports with our one-time payment plans. Select the option that best fits your needs.</p>
+        </header>
+
+        <div class="pricing-grid">
+            <!-- Silver Plan -->
+            <div class="pricing-card">
+                <h2 class="plan-name">Silver</h2>
+                <div class="price">$29.99<small> one-time</small></div>
+                <ul class="features">
+                    <li>1 Vehicle Report</li>
+                    <li>Ownership History</li>
+                    <li>Market Value Range</li>
+                    <li>Title Information</li>
+                    <li>Safety Recall Checks</li>
+                </ul>
+                <button class="btn" onclick="openModal('silver', '29.99')">Choose Plan</button>
+            </div>
+
+            <!-- Gold Plan -->
+            <div class="pricing-card popular">
+                <span class="popular-badge">Popular</span>
+                <h2 class="plan-name">Gold</h2>
+                <div class="price">$49.99<small> one-time</small></div>
+                <ul class="features">
+                    <li>1 Vehicle Report</li>
+                    <li>Ownership History</li>
+                    <li>Market Value Range</li>
+                    <li>Title Information</li>
+                    <li>Safety Recall Checks</li>
+                    <li>Vehicle Specifications</li>
+                    <li>Odometer Readings</li>
+                </ul>
+                <button class="btn" onclick="openModal('gold', '49.99')">Choose Plan</button>
+            </div>
+
+            <!-- Platinum Plan -->
+            <div class="pricing-card">
+                <h2 class="plan-name">Platinum</h2>
+                <div class="price">$59.99<small> one-time</small></div>
+                <ul class="features">
+                    <li>1 Vehicle Report</li>
+                    <li>Ownership History</li>
+                    <li>Market Value Range</li>
+                    <li>Title Information</li>
+                    <li>Safety Recall Checks</li>
+                    <li>Vehicle Specifications</li>
+                    <li>Odometer Readings</li>
+                    <li>Service Records</li>
+                    <li>Warranty Information</li>
+                </ul>
+                <button class="btn" onclick="openModal('platinum', '59.99')">Choose Plan</button>
+            </div>
+        </div>
+
+        <!-- Checkout Modal -->
+        <div id="checkout-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>Enter Your Details</h3>
+                <form id="checkout-form">
+                    <input type="hidden" id="plan-type" name="plan">
+                    <input type="hidden" id="plan-price" name="price">
+                    
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vin">Vehicle VIN Number</label>
+                        <input type="text" id="vin" name="vin" required>
+                    </div>
+                    
+                    <button type="submit" id="submit-btn" class="btn">Proceed to Payment</button>
+                    
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Processing your request...</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Paddle Configuration
+        const CONFIG = {
+            clientToken: "live_9579fa49d7bc62730429b311cba", // Replace with your actual token
+            prices: {
+                silver: "pri_01jykaf1t5gryns9vsdkcbk3mj",
+                gold: "pri_01jykanfvhz2kh2sp1wjs39z99",
+                platinum: "pri_01jykaqf57xb633t461qes8b7g"
+            }
+        };
+
+        // Initialize Paddle
+        function initializePaddle() {
+            try {
+                Paddle.Environment.set("production"); // Set to production
+                Paddle.Setup({
+                    token: CONFIG.clientToken,
+                    eventCallback: function(event) {
+                        console.log("Paddle event:", event);
+                        
+                        if (event.name === "checkout.completed") {
+                            // Handle successful completion
+                            alert("Thank you for your purchase! You will receive your report shortly.");
+                            closeModal();
+                        }
+                    }
+                });
+                console.log("Paddle initialized successfully");
+            } catch (error) {
+                console.error("Paddle initialization error:", error);
+            }
+        }
+
+        // Modal functionality
+        const modal = document.getElementById('checkout-modal');
+        const planTypeInput = document.getElementById('plan-type');
+        const planPriceInput = document.getElementById('plan-price');
+        const checkoutForm = document.getElementById('checkout-form');
+        const loadingElement = document.getElementById('loading');
+        const submitButton = document.getElementById('submit-btn');
+
+        function openModal(planType, planPrice) {
+            modal.style.display = 'block';
+            planTypeInput.value = planType;
+            planPriceInput.value = planPrice;
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            checkoutForm.reset();
+            loadingElement.style.display = 'none';
+            submitButton.style.display = 'block';
+        }
+
+        // Close modal if clicked outside
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Open Paddle checkout
+        function openPaddleCheckout(planType, customerName, customerEmail, customerVin) {
+            try {
+                const priceId = CONFIG.prices[planType.toLowerCase()];
+                
+                if (!priceId) {
+                    console.error("Invalid plan selected:", planType);
+                    alert("Invalid plan selected. Please try again.");
+                    loadingElement.style.display = 'none';
+                    submitButton.style.display = 'block';
+                    return;
+                }
+                
+                console.log(`Opening checkout for ${planType} plan with price ID: ${priceId}`);
+                
+                // Open Paddle checkout
+                Paddle.Checkout.open({
+                    items: [{
+                        priceId: priceId,
+                        quantity: 1
+                    }],
+                    customer: {
+                        email: customerEmail,
+                        firstName: customerName
+                    },
+                    passthrough: JSON.stringify({
+                        vin: customerVin,
+                        username: customerName,
+                        plan: planType
+                    }),
+                    settings: {
+                        displayMode: "overlay",
+                        theme: "light",
+                        locale: "en"
+                    }
+                });
+                
+                // Hide loading once Paddle takes over
+                loadingElement.style.display = 'none';
+                submitButton.style.display = 'block';
+                
+            } catch (error) {
+                console.error("Paddle checkout error:", error.message);
+                alert("There was an error opening the checkout. Please try again.");
+                loadingElement.style.display = 'none';
+                submitButton.style.display = 'block';
+            }
+        }
+
+        // Form submission
+        checkoutForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading, hide button
+            loadingElement.style.display = 'block';
+            submitButton.style.display = 'none';
+            
+            // Get form data
+            const formData = {
+                plan: planTypeInput.value,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                vin: document.getElementById('vin').value
+            };
+            
+            // Open Paddle checkout with collected information
+            openPaddleCheckout(
+                formData.plan, 
+                formData.name, 
+                formData.email, 
+                formData.vin
+            );
+        });
+
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", initializePaddle);
+    </script>
+</body>
+</html>
