@@ -32,30 +32,6 @@
       font-weight: bold;
     }
   </style>
-  <script>
-fetch("https://www.carcheck.store/send-email", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    email: sessionStorage.getItem("userEmail"),
-    name: sessionStorage.getItem("userName"),
-    plan: sessionStorage.getItem("userPlan"),
-    vin: sessionStorage.getItem("userVin")
-  })
-})
-.then(async res => {
-  const contentType = res.headers.get("content-type") || "";
-  if (contentType.includes("application/json")) {
-    const data = await res.json();
-    console.log("Email sent:", data);
-  } else {
-    const text = await res.text();
-    console.warn(" Response not JSON:", text);
-  }
-})
-.catch(err => console.error(" Email error", err));
-
-</script>
 
 </head>
 <body>
@@ -64,7 +40,7 @@ fetch("https://www.carcheck.store/send-email", {
     <p>Your report will be sent to your email address shortly.</p>
     <p>Please also check your <strong>Spam or Junk folder</strong> if you don't see it.</p>
     <p>If you face any issues, feel free to contact us at:</p>
-    <p class="email">itssameer2468@gmail.com</p>
+    <p class="email">car.check.store@gmail.com</p>
   </div>
 </body>
 </html>
