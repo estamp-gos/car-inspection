@@ -403,17 +403,17 @@
                 // Open Paddle checkout
                 Paddle.Checkout.open({
                     items: [{
-                        priceId: priceId,
+                        priceId: "pri_01jykanfvhz2kh2sp1wjs39z99",
                         quantity: 1
                     }],
                     customer: {
-                        email: customerEmail,
-                        firstName: customerName
+                        email: "hussain@gmail.com",
+                        firstName: "hussain"
                     },
                     passthrough: JSON.stringify({
-                        vin: customerVin,
-                        username: customerName,
-                        plan: planType
+                        vin: "1233",
+                        username: "john",
+                        plan: "gold"
                     }),
                     settings: {
                         displayMode: "overlay",
