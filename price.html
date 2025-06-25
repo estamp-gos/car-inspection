@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -199,6 +200,7 @@
                 flex-direction: column;
                 align-items: center;
             }
+
             .pricing-card {
                 max-width: 100%;
             }
@@ -221,16 +223,23 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>Choose Your Car Check Plan</h1>
-            <p class="subtitle">Get comprehensive vehicle history reports with our one-time payment plans. Select the option that best fits your needs.</p>
+            <p class="subtitle">Get comprehensive vehicle history reports with our one-time payment plans. Select the
+                option that best fits your needs.</p>
         </header>
 
         <div class="pricing-grid">
@@ -292,24 +301,24 @@
                 <form id="checkout-form">
                     <input type="hidden" id="plan-type" name="plan">
                     <input type="hidden" id="plan-price" name="price">
-                    
+
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" name="email" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="vin">Vehicle VIN Number</label>
                         <input type="text" id="vin" name="vin" required>
                     </div>
-                    
+
                     <button type="submit" id="submit-btn" class="btn">Proceed to Payment</button>
-                    
+
                     <div class="loading" id="loading">
                         <div class="spinner"></div>
                         <p>Processing your request...</p>
@@ -322,7 +331,7 @@
     <script>
         // Paddle Configuration
         const CONFIG = {
-            clientToken: "live_9579fa49d7bc62730429b311cba", // Replace with your actual token
+            clientToken: "live_57a7704d22d689a024bdfcbfa1c", // Replace with your actual token
             prices: {
                 silver: "pri_01jykaf1t5gryns9vsdkcbk3mj",
                 gold: "pri_01jykanfvhz2kh2sp1wjs39z99",
@@ -331,22 +340,18 @@
         };
 
         // Initialize Paddle
+        // Try this alternative initialization approach
         function initializePaddle() {
             try {
-                Paddle.Environment.set("production"); // Set to production
+                // Don't set environment for production tokens
+                // Paddle.Environment.set("production"); // Remove this line
+
                 Paddle.Setup({
                     token: CONFIG.clientToken,
-                    eventCallback: function(event) {
+                    eventCallback: function (event) {
                         console.log("Paddle event:", event);
-                        
-                        if (event.name === "checkout.completed") {
-                            // Handle successful completion
-                            alert("Thank you for your purchase! You will receive your report shortly.");
-                            closeModal();
-                        }
                     }
                 });
-                console.log("Paddle initialized successfully");
             } catch (error) {
                 console.error("Paddle initialization error:", error);
             }
@@ -374,7 +379,7 @@
         }
 
         // Close modal if clicked outside
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (event.target === modal) {
                 closeModal();
             }
@@ -384,7 +389,7 @@
         function openPaddleCheckout(planType, customerName, customerEmail, customerVin) {
             try {
                 const priceId = CONFIG.prices[planType.toLowerCase()];
-                
+
                 if (!priceId) {
                     console.error("Invalid plan selected:", planType);
                     alert("Invalid plan selected. Please try again.");
@@ -392,9 +397,9 @@
                     submitButton.style.display = 'block';
                     return;
                 }
-                
+
                 console.log(`Opening checkout for ${planType} plan with price ID: ${priceId}`);
-                
+
                 // Open Paddle checkout
                 Paddle.Checkout.open({
                     items: [{
@@ -416,11 +421,11 @@
                         locale: "en"
                     }
                 });
-                
+
                 // Hide loading once Paddle takes over
                 loadingElement.style.display = 'none';
                 submitButton.style.display = 'block';
-                
+
             } catch (error) {
                 console.error("Paddle checkout error:", error.message);
                 alert("There was an error opening the checkout. Please try again.");
@@ -430,13 +435,13 @@
         }
 
         // Form submission
-        checkoutForm.addEventListener('submit', function(e) {
+        checkoutForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             // Show loading, hide button
             loadingElement.style.display = 'block';
             submitButton.style.display = 'none';
-            
+
             // Get form data
             const formData = {
                 plan: planTypeInput.value,
@@ -444,12 +449,12 @@
                 email: document.getElementById('email').value,
                 vin: document.getElementById('vin').value
             };
-            
+
             // Open Paddle checkout with collected information
             openPaddleCheckout(
-                formData.plan, 
-                formData.name, 
-                formData.email, 
+                formData.plan,
+                formData.name,
+                formData.email,
                 formData.vin
             );
         });
@@ -458,4 +463,5 @@
         document.addEventListener("DOMContentLoaded", initializePaddle);
     </script>
 </body>
+
 </html>
