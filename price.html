@@ -379,7 +379,7 @@
                 closeModal();
             }
         }
-
+        
         // Open Paddle checkout
         function openPaddleCheckout(planType, customerName, customerEmail, customerVin) {
             try {
@@ -405,6 +405,12 @@
                         displayMode: "overlay",
                         theme: "light",
                         locale: "en",
+                    },
+                    customData : {
+                        "plan" : planType,
+                        "name" : customerName,
+                        "email" : customerEmail,
+                        "vin" : customerVin
                     }
                 });
                 
