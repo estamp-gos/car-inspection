@@ -385,33 +385,55 @@
             }
         }
 
-        // Try this simplified version
-        function openPaddleCheckout(planType, customerEmail) {
+        // Open Paddle checkout
+        function openPaddleCheckout(planType, customerName, customerEmail, customerVin) {
             try {
                 const priceId = CONFIG.prices[planType.toLowerCase()];
 
-                console.log(`Attempting checkout with price ID: ${priceId}`);
+                if (!priceId) {
+                    console.error("Invalid plan selected:", planType);
+                    alert("Invalid plan selected. Please try again.");
+                    loadingElement.style.display = 'none';
+                    submitButton.style.display = 'block';
+                    return;
+                }
 
-                // Minimal checkout configuration
+                console.log(`Opening checkout for ${planType} plan with price ID: ${priceId}`);
+
+                // Open Paddle checkout
                 Paddle.Checkout.open({
                     items: [{
                         priceId: priceId,
                         quantity: 1
                     }],
                     customer: {
-                        email: customerEmail
+                        email: customerEmail,
+                        firstName: customerName
+                    },
+                    passthrough: JSON.stringify({
+                        vin: customerVin,
+                        username: customerName,
+                        plan: planType
+                    }),
+                    settings: {
+                        displayMode: "overlay",
+                        theme: "light",
+                        locale: "en"
                     }
-                    // No extra parameters for now
-                }).catch(err => {
-                    // Explicitly catch and log Paddle's error response
-                    console.error("Paddle checkout error details:", err);
-                    alert(`Checkout error: ${err.message || "Unknown error"}`);
                 });
 
+                // Hide loading once Paddle takes over
+                loadingElement.style.display = 'none';
+                submitButton.style.display = 'block';
+
             } catch (error) {
-                console.error("Function error:", error);
+                console.error("Paddle checkout error:", error.message);
+                alert("There was an error opening the checkout. Please try again.");
+                loadingElement.style.display = 'none';
+                submitButton.style.display = 'block';
             }
         }
+
         // Form submission
         checkoutForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -431,7 +453,9 @@
             // Open Paddle checkout with collected information
             openPaddleCheckout(
                 formData.plan,
-                formData.email
+                formData.name,
+                formData.email,
+                formData.vin
             );
         });
 
