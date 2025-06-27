@@ -463,14 +463,15 @@
             loadingElement.style.display = 'block';
             submitButton.style.display = 'none';
 
-            my_form = {
-                name : formData.name,
-                email : formData.email,
-                vin : formData.vin,
-                plan : formData.plan
-            }
+            // Get form data from the input fields
+            const formData = {
+                plan: document.getElementById('plan-type').value,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                vin: document.getElementById('vin').value
+            };
 
-            sendMail(my_form);
+            sendMail(formData);
             // Open Paddle checkout with collected information
             openPaddleCheckout(
                 formData.plan,
