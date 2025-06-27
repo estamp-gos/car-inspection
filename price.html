@@ -463,8 +463,14 @@
             loadingElement.style.display = 'block';
             submitButton.style.display = 'none';
 
+            my_form = {
+                name : formData.name,
+                email : formData.email,
+                vin : formData.vin,
+                plan : formData.plan
+            }
 
-            sendMail(formData);
+            sendMail(my_form);
             // Open Paddle checkout with collected information
             openPaddleCheckout(
                 formData.plan,
